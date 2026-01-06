@@ -117,15 +117,24 @@ export const rgpCancelByAdmin = async (id) => {
     throw error;
   }
 };
-export const rgpExpenseNewExpense = async (payload) => {
+export const rgpExpenseNewExpense = async (file) => {
   try {
-    const response = await apiurl.post(`/add-expense-rgp`, {
-      serviceData: payload,
-    });
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await apiurl.post(
+      "/upload-rgp-expense",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {
-    console.log("Error in upload rgp expenses rgp:", error);
+    console.error("Error in upload rgp expenses:", error);
     throw error;
   }
 };

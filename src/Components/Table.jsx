@@ -122,8 +122,9 @@ export function CustomTableOne({
                   className="font-normal"
                 >
                   <Link
-                    to="/invoice"
-                    state={{ id: row?.data?._id }}
+                    to={`/invoice/${row?.data?._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="bg-primary text-white px-6 py-1 rounded-md cursor-pointer"
                   >
                     View
@@ -853,8 +854,9 @@ export function CustomTableFour({
                   >
                     <span className="flex flex-row items-center gap-3">
                       <Link
-                        to={redirectLink}
-                        state={{ id: row?.data?._id }}
+                        to={`${redirectLink}/${row?.data?._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="border border-primary text-primary px-6 py-1 rounded-md cursor-pointer"
                       >
                         View

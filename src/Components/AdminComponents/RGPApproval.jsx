@@ -153,12 +153,13 @@ const ApprovalCard = ({ item, index }) => {
             : " Sent a request to approve the rgp of"}{" "}
           {item?.customerDetails?.customerName}
           <Link
-            to="/rgp-view"
-            state={{ id: item?._id }}
+             to={`/rgp-view/${item?._id}`}
+             target="_blank"
+            rel="noopener noreferrer"
             className="mx-1 text-primary cursor-pointer underline"
           >
             {" "}
-            View rgp{" "}
+            View RGP{" "}
           </Link>
         </li>
 

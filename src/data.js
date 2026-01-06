@@ -10,12 +10,9 @@ export const fuelType = [
   { id: 2, value: "Electric Vehicle", label: "Electric Vehicle" },
 ];
 export const modelOption = [
-  { id: 0, value: "Hector", label: "Hector" },
-  { id: 1, value: "Astor", label: "Astor" },
-  { id: 2, value: "Comet", label: "Comet" },
-  { id: 2, value: "ZS EV", label: "ZS EV" },
-  { id: 2, value: "Gloster", label: "Gloster" },
-  { id: 2, value: "Windsor", label: "Windsor" },
+  { id: 0, value: "450", label: "450" },
+  { id: 1, value: "Rizta", label: "Rizta" },
+  { id: 2, value: "Apex", label: "Apex" },
 ];
 export const locationOption = [
   { id: 2, value: "Attapur", label: "Attapur" },
@@ -49,6 +46,10 @@ export const subPlanOption = [
 ];
 export const regTypeOption = [{ id: 1, value: "Private", label: "Private" }];
 export const rgpType = [
+  { id: 1, value: "Normal", label: "Normal" },
+  { id: 2, value: "Insurance", label: "Insurance" },
+];
+export const serviceOpt = [
   { id: 1, value: "3 Years", label: "3 Years" },
   { id: 2, value: "5 Years", label: "5 Years" },
 ];

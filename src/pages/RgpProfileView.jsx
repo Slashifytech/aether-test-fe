@@ -33,13 +33,31 @@ const RgpProfileView = () => {
     "Total Amount",
   ];
   const TABLE_ROWS = rgpByIdorStatus?.data?.rgpExpense?.map((data, index) => ({
-    sno:  index + 1,
+    sno: index + 1,
     data: data || "NA",
   }));
   const totalExpense = rgpByIdorStatus?.data?.rgpExpense?.reduce(
     (sum, data) => sum + Number(data?.serviceTotalAmount || 0),
     0
   );
+  const renderCredits = (credits = []) => {
+    if (!Array.isArray(credits) || credits.length === 0) {
+      return <span className="text-gray-400">NA</span>;
+    }
+
+    return credits.map((item, index) => (
+      <div key={index} className="flex justify-between">
+        <span>{item.name}</span>
+        <span>{item.value}</span>
+      </div>
+    ));
+  };
+
+  const getTotal = (credits = []) => {
+    if (!Array.isArray(credits)) return 0;
+    return credits.reduce((sum, item) => sum + Number(item.value || 0), 0);
+  };
+
   return (
     <>
       <Header customLink="/agent/shortlist" />
@@ -140,8 +158,8 @@ const RgpProfileView = () => {
                   </span>
                   <span className="font-light mt-4">Agreement Period</span>
                   <span className="font-medium">
-                    {rgpByIdorStatus?.data?.vehicleDetails
-                      ?.agreementPeriod || "NA"}
+                    {rgpByIdorStatus?.data?.vehicleDetails?.agreementPeriod ||
+                      "NA"}
                   </span>
                   <span className="font-light mt-4">Agreement Valid Date</span>
                   <span className="font-medium">
@@ -184,6 +202,7 @@ const RgpProfileView = () => {
                   <span className="font-medium">
                     {rgpByIdorStatus?.data?.vehicleDetails?.total || "NA"}
                   </span>
+                
                 </span>
               </div>
             </div>
@@ -204,17 +223,36 @@ const RgpProfileView = () => {
                   <span className="font-medium">
                     {rgpByIdorStatus?.data?.vehicleDetails?.total || "NA"}
                   </span>
-                </span>
-                <span className="w-1/2 flex flex-col text-[15px]">
-                  <span className="font-light mt-4">Available Credit</span>
-                  <span className="font-medium">
-                    {rgpByIdorStatus?.data?.rgpCredit ||
-                      "NA"}
-                  </span>
-                  <span className="font-light mt-4">Expenses</span>
+                    <span className="font-light mt-4">Expenses</span>
                   <span className="font-medium">
                     {totalExpense || "NA"}
                   </span>{" "}
+                </span>
+                <span className="w-1/2 flex flex-col text-[15px]">
+                  <span className="font-light mt-4">Available Credit</span>
+
+                  <div className="font-medium space-y-1">
+                    {renderCredits(rgpByIdorStatus?.data?.availableCredit)}
+
+                    <div className="flex justify-between border-t pt-1 font-semibold">
+                      <span>Total</span>
+                      <span>
+                        {getTotal(rgpByIdorStatus?.data?.availableCredit)}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="font-light mt-4">Total Credit</span>
+
+                  <div className="font-medium space-y-1">
+                    {renderCredits(rgpByIdorStatus?.data?.totalCredit)}
+
+                    <div className="flex justify-between border-t pt-1 font-semibold">
+                      <span>Total</span>
+                      <span>
+                        {getTotal(rgpByIdorStatus?.data?.totalCredit)}
+                      </span>
+                    </div>
+                  </div>
                 </span>
               </div>
             </div>

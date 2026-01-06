@@ -146,65 +146,19 @@ const AdminRGPList = () => {
   };
 
   const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file && file.type === "text/csv") {
-      Papa.parse(file, {
-        complete: async (result) => {
-          let parsedData = result.data;
-        
-          if (parsedData.length === 0) {
-            toast.error("CSV file is empty.");
-            event.target.value = "";
-            return;
-          }
-          parsedData = parsedData.filter(entry => entry.issueType === "INT");
+  const file = event.target.files[0];
+  if (!file) return;
 
-          if (parsedData.length === 0) {
-            toast.error("No valid INT issueType entries found.");
-            event.target.value = "";
-            return;
-          }
-  
-        const groupedData = parsedData.reduce((acc, entry) => {
-          const { serviceVinNumber } = entry;
-
-          if (!serviceVinNumber) {
-            return acc;
-          }
-
-          if (!acc[serviceVinNumber]) {
-            acc[serviceVinNumber] = {
-              serviceVinNumber,
-              expenses: [],
-            };
-          }
-
-          acc[serviceVinNumber].expenses.push(entry);
-          return acc;
-        }, {});
-
-        // Convert grouped data to an array
-        const groupedArray = Object.values(groupedData);
-
-        console.log("Grouped CSV Data:", groupedArray);
-
-        // Send all data in one API call
-        try {
-          await rgpExpenseNewExpense(groupedArray);
-          toast.success("All expenses uploaded successfully!");
-          event.target.value = "";
-        } catch (error) {
-          event.target.value = "";
-          console.error(error);
-          toast.error(error?.response?.data?.message || "Error uploading expenses.");
-        }
-      },
-      header: true,
-    });
-  } else {
-    toast.error("Please upload a valid CSV file.");
+  try {
+    await rgpExpenseNewExpense(file);
+    toast.success("All expenses uploaded successfully!");
     event.target.value = "";
+  } catch (error) {
+    event.target.value = "";
+    console.error(error);
+    toast.error(
+      error?.response?.data?.message || "Error uploading expenses."
+    );
   }
 };
 

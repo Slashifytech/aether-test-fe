@@ -133,3 +133,108 @@ export function addPercentageToNumber(percent, number) {
 }
 
 
+export function numberToWords(amount) {
+  if (amount === null || amount === undefined || isNaN(amount)) {
+    return "";
+  }
+
+  const ones = [
+    "",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight",
+    "Nine",
+    "Ten",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+  ];
+
+  const tens = [
+    "",
+    "",
+    "Twenty",
+    "Thirty",
+    "Forty",
+    "Fifty",
+    "Sixty",
+    "Seventy",
+    "Eighty",
+    "Ninety",
+  ];
+
+  const convertTwoDigits = (num) => {
+    if (num < 20) return ones[num];
+    return tens[Math.floor(num / 10)] + (num % 10 ? " " + ones[num % 10] : "");
+  };
+
+  const convertThreeDigits = (num) => {
+    let str = "";
+    if (num >= 100) {
+      str += ones[Math.floor(num / 100)] + " Hundred";
+      num = num % 100;
+      if (num > 0) str += " ";
+    }
+    if (num > 0) {
+      str += convertTwoDigits(num);
+    }
+    return str;
+  };
+
+  const convertNumber = (num) => {
+    let result = "";
+
+    if (num >= 10000000) {
+      result +=
+        convertThreeDigits(Math.floor(num / 10000000)) + " Crore ";
+      num %= 10000000;
+    }
+
+    if (num >= 100000) {
+      result +=
+        convertThreeDigits(Math.floor(num / 100000)) + " Lakh ";
+      num %= 100000;
+    }
+
+    if (num >= 1000) {
+      result +=
+        convertThreeDigits(Math.floor(num / 1000)) + " Thousand ";
+      num %= 1000;
+    }
+
+    if (num > 0) {
+      result += convertThreeDigits(num);
+    }
+
+    return result.trim();
+  };
+
+  const rupees = Math.floor(amount);
+  const paise = Math.round((amount - rupees) * 100);
+
+  let words = "";
+
+  if (rupees === 0) {
+    words = "Zero Rupees";
+  } else {
+    words = "Rupees " + convertNumber(rupees);
+  }
+
+  if (paise > 0) {
+    words += " and " + convertTwoDigits(paise) + " Paise";
+  }
+
+  return words + " Only";
+}
+

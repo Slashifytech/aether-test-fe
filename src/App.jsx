@@ -116,7 +116,7 @@ const router = createBrowserRouter([
  
   
   {
-    path: "/rgp-view",
+    path: "/rgp-view/:rgpToken",
     element: (
         <ViewRGP></ViewRGP>
     ),
@@ -206,7 +206,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/invoice",
+    path: "/invoice/:invoiceToken",
     element: (
       // <ProtectedAdmin>
         <InvoiceView/>

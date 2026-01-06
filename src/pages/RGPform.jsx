@@ -8,7 +8,7 @@ import { addNewrgp, updatergp } from "../features/RGPapi";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchrgpDataById } from "../features/RGPSlice";
 import { createdDate, formatDate } from "../helper/commonHelperFunc";
-import { rgpType, fuelType, locationOption, modelOption } from "../data";
+import { rgpType, fuelType, locationOption, modelOption, serviceOpt } from "../data";
 import Header from "../Components/Header";
 const RGPform = () => {
   const location = useLocation();
@@ -168,7 +168,7 @@ const RGPform = () => {
     {
       name: "servicePackage",
       type: "select",
-      options: rgpType,
+      options: serviceOpt,
       placeholder: "Service Package",
       label: "Service Package",
       required: true,
@@ -262,9 +262,9 @@ const RGPform = () => {
         updatedSection.wetWashService = years;
       }
 
-      if (name === "agreementPeriod") {
-        updatedSection.MaximumValidPMS = parseFloat(value) || 0;
-      }
+      // if (name === "agreementPeriod") {
+      //   updatedSection.MaximumValidPMS = parseFloat(value) || 0;
+      // }
       if (name === "agreementPeriod" || name === "agreementStartDate") {
         const agreementPeriod = parseFloat(
           name === "agreementPeriod" ? value : updatedSection.agreementPeriod

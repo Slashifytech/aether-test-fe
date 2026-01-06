@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GroupedInput } from "../Components/Input";
 import { createdDate } from "../helper/commonHelperFunc";
@@ -15,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updatergpStatus } from "../features/RGPapi";
 import Header from "../Components/Header";
 import { fetchrgpDataById } from "../features/RGPSlice";
+import { numberToWords } from "../../Util/UtilityFunction";
 
 const initialInvoiceData = {
   invoiceType: "",
@@ -44,16 +44,23 @@ const initialInvoiceData = {
     vinNumber: "",
     branchName: "",
     model: "",
-gstAmount: "",
-initialGstAmount:"",
+    gstAmount: "",
+    initialGstAmount: "",
     cgst: 0,
     sgst: 0,
-    totalAmount: 0,
     rmEmail: "",
     rmName: "",
     rmEmployeeId: "",
     gmEmail: "",
-    totalAmountInWords: "",
+    totalValue: "",
+    discountPercent: "",
+
+    taxableValue: "",
+    totalAssessableValue: "",
+    totalGst: "",
+    totalInvoiceValue: "",
+    taxPayableAmtinWord: "",
+    invoiceValueAmtInWord: "",
   },
 };
 
@@ -63,7 +70,6 @@ const InvoiceForm = () => {
   const navigate = useNavigate();
   const { invoiceById } = useSelector((state) => state.invoice);
   const { rgpByIdorStatus } = useSelector((state) => state.rgp);
- 
 
   const { users } = useSelector((state) => state.users);
   const [isLoading, setisLoading] = useState(false);
@@ -139,49 +145,6 @@ const InvoiceForm = () => {
       label: "Branch Name",
     },
     {
-      name: "model",
-      type: "text",
-      placeholder: "Model",
-      label: "Model",
-      required: true,
-    },
-    {
-      name: "cgst",
-      type: "number",
-      placeholder: "CGST 9%",
-      label: "CGST 9%",
-      required: true,
-    },
-    {
-      name: "totalAmount",
-      type: "number",
-      placeholder: "Total Amount",
-      label: "Total Amount",
-      required: true,
-    },
-
-    {
-      name: "rmEmployeeId",
-      type: "text",
-      placeholder: "Employee Id of Relationship Manager/ Service Advisor",
-      label: "Employee Id of Relationship Manager/ Service Advisor",
-      required: true,
-    },
-    {
-      name: "gmEmail",
-      type: "email",
-      placeholder: "General Manager Email Id",
-      label: "General Manager Email",
-    },
-  ];
-  const leftVehicleFields = [
-    {
-      name: "hypothecated",
-      type: "text",
-      placeholder: "Hypothecated To",
-      label: "Hypothecated To",
-    },
-    {
       name: "vinNumber",
       type: "text",
       placeholder: "Vin Number",
@@ -196,6 +159,13 @@ const InvoiceForm = () => {
       required: true,
     },
     {
+      name: "totalValue",
+      type: "text",
+      placeholder: "Total Value",
+      label: "Total Value",
+    },
+
+    {
       name: "sgst",
       type: "number",
       placeholder: "SGST 9%",
@@ -203,17 +173,99 @@ const InvoiceForm = () => {
       required: true,
     },
     {
-      name: "totalAmountInWords",
+      name: "totalGst",
       type: "text",
-      placeholder:  "Total Amount In Words",
-      label: "Total Amount In Words",
+      placeholder: "Total GST Value",
+      label: "Total GST Value",
     },
+    {
+      name: "totalInvoiceValue",
+      type: "text",
+      placeholder: "Total Invoice Value",
+      label: "Total Invoice Value",
+    },
+    {
+      name: "totalAmount",
+      type: "number",
+      placeholder: "Total Amount",
+      label: "Total Amount",
+      required: true,
+    },
+
     {
       name: "rmName",
       type: "text",
       placeholder: "Relationship Manager / Service Advisor Name",
       label: "Name of Relationship Manager / Service Advisor ",
       required: true,
+    },
+
+    {
+      name: "rmEmployeeId",
+      type: "text",
+      placeholder: "Employee Id of Relationship Manager/ Service Advisor",
+      label: "Employee Id of Relationship Manager/ Service Advisor",
+      required: true,
+    },
+  ];
+  const leftVehicleFields = [
+    {
+      name: "hypothecated",
+      type: "text",
+      placeholder: "Hypothecated To",
+      label: "Hypothecated To",
+    },
+    {
+      name: "model",
+      type: "text",
+      placeholder: "Model",
+      label: "Model",
+      required: true,
+    },
+    {
+      name: "hsnCode",
+      type: "text",
+      placeholder: "HSN/SAC code",
+      label: "HSN/SAC code",
+      required: true,
+    },
+    {
+      name: "discountPercent",
+      type: "text",
+      placeholder: "Discount %",
+      label: "Discount %",
+    },
+
+    {
+      name: "cgst",
+      type: "number",
+      placeholder: "CGST 9%",
+      label: "CGST 9%",
+      required: true,
+    },
+    {
+      name: "taxableValue",
+      type: "text",
+      placeholder: "Taxable Value",
+      label: "Taxable Value",
+    },
+    {
+      name: "totalAssessableValue",
+      type: "text",
+      placeholder: "Total Assessable Value",
+      label: "Total Assessable Value",
+    },
+    {
+      name: "invoiceValueAmtInWord",
+      type: "text",
+      placeholder: "Invoice Value Amount In Words",
+      label: "Invoice Value Amount In Words",
+    },
+    {
+      name: "taxPayableAmtinWord",
+      type: "text",
+      placeholder: "Tax Payable Amount in Words",
+      label: "Tax Payable Amount in Words",
     },
     {
       name: "rmEmail",
@@ -222,19 +274,76 @@ const InvoiceForm = () => {
       label: "Email Id of Relationship Manager/ Service Advisor ",
       required: true,
     },
+    {
+      name: "gmEmail",
+      type: "email",
+      placeholder: "General Manager Email Id",
+      label: "General Manager Email",
+    },
   ];
 
-const handleInput = (e) => {
+  const handleInput = (e) => {
     const { name, value, dataset } = e.target;
     const section = dataset?.section;
-    setInvoiceData((prevState) => ({
-      ...prevState,
-      [section]: {
+
+    setInvoiceData((prevState) => {
+      const updatedSection = {
         ...prevState[section],
         [name]: value,
-      },
-    }));
+      };
+
+      const toTwoDecimal = (num) => Number(num.toFixed(2));
+
+      // Always read base values
+      const gstAmount = Number(updatedSection.gstAmount || 0);
+      const discountPercent = Number(updatedSection.discountPercent || 0);
+      const cgst = Number(updatedSection.cgst || 0);
+      const sgst = Number(updatedSection.sgst || 0);
+
+      // 🔒 Default existing values (do NOT recalc unless discount changes)
+      let totalValue = prevState[section]?.totalValue || gstAmount;
+      let taxableValue = prevState[section]?.taxableValue || totalValue;
+      let totalAssessableValue =
+        prevState[section]?.totalAssessableValue || totalValue;
+
+      // ✅ Recalculate ONLY when discountPercent changes
+      if (name === "discountPercent") {
+        const discountAmount = toTwoDecimal(
+          (gstAmount * discountPercent) / 100
+        );
+
+        totalValue = toTwoDecimal(gstAmount - discountAmount);
+        taxableValue = totalValue;
+        totalAssessableValue = totalValue;
+      }
+
+      const totalGst = toTwoDecimal(cgst + sgst);
+
+      const totalInvoiceValue = toTwoDecimal(
+        totalValue + totalAssessableValue + totalGst
+      );
+
+      const taxPayableAmtinWord = numberToWords(Math.round(totalGst)) + " Only";
+
+      const invoiceValueAmtInWord =
+        numberToWords(Math.round(totalInvoiceValue)) + " Only";
+
+      return {
+        ...prevState,
+        [section]: {
+          ...updatedSection,
+          totalValue,
+          taxableValue,
+          totalAssessableValue,
+          totalGst,
+          totalInvoiceValue,
+          taxPayableAmtinWord,
+          invoiceValueAmtInWord,
+        },
+      };
+    });
   };
+
   useEffect(() => {
     return () => {
       setInvoiceData({ ...initialInvoiceData });
@@ -245,16 +354,16 @@ const handleInput = (e) => {
   const calculateVehicleDetails = useCallback(() => {
     setInvoiceData((prevState) => {
       const inputGst = Number(prevState.vehicleDetails?.initialGstAmount || 0);
-  
+
       if (!inputGst) return prevState; // No input, don't calculate
-  
+
       // Compute base amount and taxes
       const baseAmount = Number((inputGst / 1.18).toFixed(2));
       const totalGst = Number((inputGst - baseAmount).toFixed(2));
       const cgst = Number((totalGst / 2).toFixed(2));
       const sgst = Number((totalGst - cgst).toFixed(2));
       const totalAmount = Number((baseAmount + cgst + sgst).toFixed(2));
-  
+
       // Avoid unnecessary updates
       if (
         prevState.vehicleDetails?.cgst === cgst &&
@@ -263,7 +372,7 @@ const handleInput = (e) => {
       ) {
         return prevState;
       }
-  
+
       return {
         ...prevState,
         vehicleDetails: {
@@ -271,21 +380,19 @@ const handleInput = (e) => {
           cgst,
           sgst,
           totalAmount,
-          gstAmount: baseAmount
+          gstAmount: baseAmount,
         },
       };
     });
   }, []);
-  
-  
+
   useEffect(() => {
     if (invoiceData.vehicleDetails?.gstAmount) {
       calculateVehicleDetails();
     }
-  }, [invoiceData.vehicleDetails?.gstAmount, calculateVehicleDetails]); 
-  
-  
-  console.log(invoiceData.vehicleDetails, invoiceData.vehicleDetails.gstAmount)
+  }, [invoiceData.vehicleDetails?.gstAmount, calculateVehicleDetails]);
+
+  // console.log(invoiceData.vehicleDetails, invoiceData.vehicleDetails.gstAmount)
   const handleCheckboxChange = (e) => {
     setSameAsBilling(e.target.checked);
     if (e.target.checked) {
@@ -301,7 +408,7 @@ const handleInput = (e) => {
       "vehicleDetails.gmEmail",
       "vehicleDetails.hypothecated",
       "vehicleDetails.branchName",
-      "vehicleDetails.totalAmountInWords"
+      "vehicleDetails.totalAmountInWords",
     ];
     const notRequiredCustomerFields = [
       "billingDetail.address",
@@ -380,15 +487,23 @@ const handleInput = (e) => {
     }
     if (id) {
       dispatch(fetchrgpDataById({ id, option: null }));
-
     }
   }, [id, invoiceId]);
 
   useEffect(() => {
     if (location.pathname === "/admin/invoice-edit" && invoiceById?.invoice) {
+      const totalValue = Number(
+        invoiceById?.invoice?.vehicleDetails?.totalValue || 0
+      ).toFixed(2);
+
       setInvoiceData((prev) => ({
         ...prev,
         ...invoiceById?.invoice,
+        vehicleDetails: {
+          ...invoiceById?.invoice?.vehicleDetails,
+          taxableValue: Number(totalValue),
+          totalAssessableValue: Number(totalValue),
+        },
       }));
     }
   }, [invoiceById?.invoice, location.pathname]);
@@ -422,13 +537,14 @@ const handleInput = (e) => {
             mergedData.vehicleDetails?.model ||
             mergedData.vehicleDetails?.vehicleModel ||
             "",
-  gstAmount:
+          gstAmount:
             mergedData.vehicleDetails?.total ||
             mergedData.vehicleDetails?.totalPayment ||
             mergedData.ewDetails?.warrantyAmount ||
             "",
 
-          initialGstAmount:  mergedData.vehicleDetails?.total ||
+          initialGstAmount:
+            mergedData.vehicleDetails?.total ||
             mergedData.vehicleDetails?.totalPayment ||
             mergedData.ewDetails?.warrantyAmount ||
             "",
@@ -441,14 +557,13 @@ const handleInput = (e) => {
     }
   }, [typeData, mergedData]);
 
-
-  const payload =
-  
-  {
-      ...invoiceData,
-      ...(createdBy && { createdBy }),
-      ...(mergedData?.vehicleDetails?.dealerLocation && { location: mergedData.vehicleDetails.dealerLocation }) // Add only if location exists
-    };
+  const payload = {
+    ...invoiceData,
+    ...(createdBy && { createdBy }),
+    ...(mergedData?.vehicleDetails?.dealerLocation && {
+      location: mergedData.vehicleDetails.dealerLocation,
+    }), // Add only if location exists
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validateFields();
@@ -495,23 +610,17 @@ const handleInput = (e) => {
     //   }, {});
     // };
 
- 
-  
-     
     const role = localStorage.getItem("roleType");
     try {
       setisLoading(true);
       let res;
 
       if (invoiceId) {
-        const { createdBy, createdAt, ...editPayload } = invoiceData; 
+        const { createdBy, createdAt, ...editPayload } = invoiceData;
         res = await editInovoice(editPayload, invoiceId);
         toast.success(res?.message || "Invoice updated successfully");
       } else {
-        const updateResponse =
-       
-          
-            await updatergpStatus(id, "approved", null);
+        const updateResponse = await updatergpStatus(id, "approved", null);
 
         if (updateResponse.status === 200) {
           res = await addNewInovoice(payload, role);

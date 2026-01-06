@@ -36,7 +36,7 @@ export const fetchAllMgAgents = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const data = await getAllMgAgents();
-      return data.mgAgents;
+      return data.atherAgents;
     } catch (err) {
       console.error("Error in fetchAllMgAgents Thunk:", err);
       return rejectWithValue(err.response ? err.response.data : err.message);

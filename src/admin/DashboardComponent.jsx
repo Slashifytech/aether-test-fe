@@ -25,6 +25,10 @@ const DashboardComponent = () => {
     totalrgp: "",
     totalRevenue: "",
     totalExpense: "",
+    vasPriceCount: "",
+    partsPriceCount: "",
+    labourPriceCount: "",
+    serviceTypeAmount: "",
   });
  
 
@@ -34,13 +38,11 @@ const DashboardComponent = () => {
   const handleInputChange = (e, dataType) => {
     const { name, value } = e.target;
 
-    if (dataType === "RGP") {
       setrgpData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     } 
-  };
 
   const getrgpData = async () => {
     try {
@@ -56,6 +58,10 @@ const DashboardComponent = () => {
         totalrgp: res?.totalrgpCount,
         totalRevenue: res?.totalRevenue,
         totalExpense: res?.totalExpense,
+          vasPriceCount: res?.totalVasPrice,
+        partsPriceCount: res?.totalPartsPrice,
+        labourPriceCount: res?.totalLabourPrice,
+
       }));
     } catch (error) {
       console.log(error);
@@ -83,6 +89,11 @@ const DashboardComponent = () => {
       countData: rgpData?.totalExpense,
       title: "Total rgp Expense",
       icon: icon,
+       isRgpData: true,
+      vasPriceCount: rgpData?.vasPriceCount,
+      partsPriceCount: rgpData?.partsPriceCount,
+      labourPriceCount: rgpData?.labourPriceCount,
+      serviceTypeAmount: rgpData?.serviceTypeAmount,
     },
   ];
 
@@ -160,6 +171,10 @@ const DashboardComponent = () => {
             titleData={item.title}
             bgImg={item.bgImg}
             icon={item.icon}
+            vasPriceCount={item.vasPriceCount}
+                partsPriceCount={item.partsPriceCount}
+                labourPriceCount={item.labourPriceCount}
+                isRgpData={item.isRgpData}
           />
         ))}
       </div>

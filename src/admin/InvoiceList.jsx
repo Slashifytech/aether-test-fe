@@ -7,7 +7,7 @@ const InvvoiceList = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const tabs = [
-    { id: 0, label: "rgp Invoice Lists", component: <InvoiceRgpList /> },
+    { id: 0, label: "RGP Invoice Lists", component: <InvoiceRgpList /> },
   
   ];
 

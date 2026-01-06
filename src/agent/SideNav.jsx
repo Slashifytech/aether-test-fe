@@ -46,7 +46,7 @@ const SideNav = () => {
             loading="lazy"
             src={logo}
             alt="logo"
-            className="md:w-44 sm:w-32 md:h-32 sm:h-16 ml-6 "
+            className="md:w-44 sm:w-32 md:h-24 sm:h-16  "
           />
         </span>
         {sidebarList.map((item, index) => (

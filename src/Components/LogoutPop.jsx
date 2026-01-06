@@ -11,7 +11,7 @@ const LogoutPop = ({ isLogoutOpen, closeLogout }) => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/raam-group/login");
+    navigate("/ather/login");
     closeLogout();
   };
 

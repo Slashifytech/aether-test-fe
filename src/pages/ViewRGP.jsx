@@ -5,10 +5,11 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import html2pdf from "html2pdf.js";
 import { getrgpbyId } from "../features/RGPapi";
 import Loader from "../Components/Loader";
+import { formatDate } from "../helper/commonHelperFunc";
 
 const paragraphStyle = {
   paddingLeft: "2.5em",
@@ -17,8 +18,8 @@ const paragraphStyle = {
 };
 const ViewRGP = forwardRef(({ id }, ref) => {
   const [data, setData] = useState();
-  const location = useLocation();
-  const rgpId = id ? id : location?.state?.id;
+    const {rgpToken} = useParams();
+  const rgpId = id ? id : rgpToken
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,26 +67,45 @@ const ViewRGP = forwardRef(({ id }, ref) => {
       >
         TERMS AND CONDITIONS
       </h2>
-      <div className="flex flex-col items-start justify-center text-[14px]">
+      <div className="flex flex-col items-start justify-center text-[13px]">
         <div className="mt-9">
           <p className="font-bold underline">1. Introduction:</p>
 
           <p>
             These Terms and Conditions (“Terms”) govern the{" "}
-            {data?.customerDetails?.rgpType} Service Package (“Package”) offered
+            {data?.vehicleDetails?.servicePackage} Service Package (“Package”) offered
             by Raam Electric Two Wheelers LLP. (hereinafter referred to as "Raam
             Ather" or "Company"). By enrolling in the Package, customers
             (“Participants”) agree to be bound by these Terms:
           </p>
         </div>
-
+        <br />
+        <div>
+          {" "}
+          <p>Customer Name: {data?.customerDetails?.customerName}</p>{" "}
+          <p>Vin Number: {data?.vehicleDetails?.vinNumber}</p>{" "}
+          <p>Model: {data?.vehicleDetails?.model}</p>{" "}
+          <p>Agreement Period: {data?.vehicleDetails?.agreementPeriod}</p>{" "}
+          <p>
+            {" "}
+            Agreement Start date:{" "}
+            {formatDate(data?.vehicleDetails?.agreementStartDate)}{" "}
+          </p>{" "}
+          <p>
+            {" "}
+            Agreement Valid Date:{" "}
+            {formatDate(data?.vehicleDetails?.agreementValidDate)}{" "}
+          </p>{" "}
+          <p>Maximum PMS allowed: {data?.vehicleDetails?.MaximumValidPMS}</p>{" "}
+          <p>Location of the Dealer: {data?.vehicleDetails?.dealerLocation}</p>{" "}
+        </div>
         <div className="mt-9">
           <p className="font-semibold underline">2. Package Overview: </p>
 
           <p>
             The Package is designed to provide Participants with periodic
             vehicle maintenance services from date of Package purchase valid up
-            to {data?.customerDetails?.rgpType} or 50,000 kilometers, whichever
+            to {data?.vehicleDetails?.servicePackage} or 50,000 kilometers, whichever
             occurs earlier, to ensure their Ather vehicle remains in optimal
             condition. The Package is available for a one-time, non-refundable
             payment of INR 7375/-.
@@ -211,7 +231,7 @@ const ViewRGP = forwardRef(({ id }, ref) => {
               display: "inline",
             }}
           >
-            {data?.customerDetails?.rgpType === "3 Years"
+            {data?.vehicleDetails?.servicePackage === "3 Years"
               ? "Participants are entitled to 6 free periodic maintenance service charges over the 3-year period, which can be availed exclusively at authorized Raam Ather outlets."
               : "Participants are entitled to 10 free periodic maintenance service charges over the 5-year period, which can be availed exclusively at authorized Raam Ather outlets."}
           </p>
@@ -321,8 +341,9 @@ const ViewRGP = forwardRef(({ id }, ref) => {
               periodic maintenance.
             </li>
             <li className="mt-2">
-              Any services or benefits not availed within the {data?.customerDetails?.rgpType} validity
-              period (they cannot be carried forward or redeemed for cash).
+              Any services or benefits not availed within the{" "}
+              {data?.vehicleDetails?.servicePackage} validity period (they cannot be
+              carried forward or redeemed for cash).
             </li>
             <li className="mt-2">
               Wear-and-tear items (e.g., tyre, side stand, lights) other than
@@ -336,8 +357,8 @@ const ViewRGP = forwardRef(({ id }, ref) => {
           </ul>
         </div>
 
-        <div className="pt-28">
-          <p className="font-bold underline">7. Modification of Terms: </p>
+        <div className="mt-52">
+          <p className="font-bold underline pt-28">7. Modification of Terms: </p>
 
           <p>
             The Company Raam Ather reserves the right to modify these Terms at
@@ -457,9 +478,9 @@ const ViewRGP = forwardRef(({ id }, ref) => {
           </p>
 
           <p className="mt-9">
-            By enrolling in the {data?.customerDetails?.rgpType} Service Package, Participants acknowledge
-            that they have read, understood, and agreed to all the terms and
-            conditions stated herein.
+            By enrolling in the {data?.vehicleDetails?.servicePackage} Service
+            Package, Participants acknowledge that they have read, understood,
+            and agreed to all the terms and conditions stated herein.
           </p>
 
           {/* Customer Details */}

@@ -7,7 +7,7 @@ const CancelledApprovals = () => {
   const [activeTab, setActiveTab] = useState(0);
 
   const tabs = [
-    { id: 0, label: "rgp Cancel Approval", component: <RgpCancelApproval /> },
+    { id: 0, label: "RGP Cancel Approval", component: <RgpCancelApproval /> },
 
   ];
 
