@@ -184,13 +184,7 @@ const InvoiceForm = () => {
       placeholder: "Total Invoice Value",
       label: "Total Invoice Value",
     },
-    {
-      name: "totalAmount",
-      type: "number",
-      placeholder: "Total Amount",
-      label: "Total Amount",
-      required: true,
-    },
+    
 
     {
       name: "rmName",
@@ -302,7 +296,7 @@ const InvoiceForm = () => {
 
       // 🔒 Default existing values (do NOT recalc unless discount changes)
       let totalValue = prevState[section]?.totalValue || gstAmount;
-      let taxableValue = prevState[section]?.taxableValue || totalValue;
+      let taxableValue = prevState[section]?.taxableValue +cgst +sgst|| totalValue;
       let totalAssessableValue =
         prevState[section]?.totalAssessableValue || totalValue;
 
@@ -313,7 +307,7 @@ const InvoiceForm = () => {
         );
 
         totalValue = toTwoDecimal(gstAmount - discountAmount);
-        taxableValue = totalValue;
+        taxableValue = totalValue + sgst + cgst;
         totalAssessableValue = totalValue;
       }
 
