@@ -173,10 +173,10 @@ const InvoiceForm = () => {
       required: true,
     },
     {
-      name: "totalGst",
+      name: "taxableValue",
       type: "text",
-      placeholder: "Total GST Value",
-      label: "Total GST Value",
+      placeholder: "Taxable Value",
+      label: "Taxable Value",
     },
     {
       name: "totalInvoiceValue",
@@ -200,6 +200,12 @@ const InvoiceForm = () => {
       placeholder: "Employee Id of Relationship Manager/ Service Advisor",
       label: "Employee Id of Relationship Manager/ Service Advisor",
       required: true,
+    },
+     {
+      name: "gmEmail",
+      type: "email",
+      placeholder: "General Manager Email Id",
+      label: "General Manager Email",
     },
   ];
   const leftVehicleFields = [
@@ -237,12 +243,13 @@ const InvoiceForm = () => {
       label: "CGST 9%",
       required: true,
     },
-    {
-      name: "taxableValue",
+     {
+      name: "totalGst",
       type: "text",
-      placeholder: "Taxable Value",
-      label: "Taxable Value",
+      placeholder: "Total GST Value",
+      label: "Total GST Value",
     },
+   
     {
       name: "totalAssessableValue",
       type: "text",
@@ -268,12 +275,7 @@ const InvoiceForm = () => {
       label: "Email Id of Relationship Manager/ Service Advisor ",
       required: true,
     },
-    {
-      name: "gmEmail",
-      type: "email",
-      placeholder: "General Manager Email Id",
-      label: "General Manager Email",
-    },
+   
   ];
 
   const handleInput = (e) => {
@@ -307,7 +309,8 @@ const InvoiceForm = () => {
         );
 
         totalValue = toTwoDecimal(gstAmount - discountAmount);
-        taxableValue = totalValue + sgst + cgst;
+      taxableValue = Number(totalValue + sgst + cgst).toFixed(2);
+
         totalAssessableValue = totalValue;
       }
 

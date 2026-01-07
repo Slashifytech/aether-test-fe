@@ -30,19 +30,17 @@ const DashboardComponent = () => {
     labourPriceCount: "",
     serviceTypeAmount: "",
   });
- 
 
   const rgpPath = "/rgp-stats-data";
-  
 
   const handleInputChange = (e, dataType) => {
     const { name, value } = e.target;
 
-      setrgpData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    } 
+    setrgpData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const getrgpData = async () => {
     try {
@@ -58,10 +56,9 @@ const DashboardComponent = () => {
         totalrgp: res?.totalrgpCount,
         totalRevenue: res?.totalRevenue,
         totalExpense: res?.totalExpense,
-          vasPriceCount: res?.totalVasPrice,
+        vasPriceCount: res?.totalVasPrice,
         partsPriceCount: res?.totalPartsPrice,
         labourPriceCount: res?.totalLabourPrice,
-
       }));
     } catch (error) {
       console.log(error);
@@ -70,9 +67,13 @@ const DashboardComponent = () => {
 
   useEffect(() => {
     getrgpData();
-  }, [rgpData.endDate, rgpData.startDate, rgpData.location, rgpData.vehicleModel]);
+  }, [
+    rgpData.endDate,
+    rgpData.startDate,
+    rgpData.location,
+    rgpData.vehicleModel,
+  ]);
 
- 
   const rgpCardData = [
     {
       countData: rgpData?.totalrgp,
@@ -89,7 +90,7 @@ const DashboardComponent = () => {
       countData: rgpData?.totalExpense,
       title: "Total rgp Expense",
       icon: icon,
-       isRgpData: true,
+      isRgpData: true,
       vasPriceCount: rgpData?.vasPriceCount,
       partsPriceCount: rgpData?.partsPriceCount,
       labourPriceCount: rgpData?.labourPriceCount,
@@ -97,11 +98,10 @@ const DashboardComponent = () => {
     },
   ];
 
-  
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); 
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -116,7 +116,6 @@ const DashboardComponent = () => {
         <Header />
       </div>
 
-
       <div className="ml-0 sm:ml-[28%] md:ml-[20%] mt-20 ">
         <p className="text-[30px] font-bold">Dashboard</p>
         <p className="text-[16px] font-normal">
@@ -125,65 +124,62 @@ const DashboardComponent = () => {
       </div>
 
       {loading ? (
-      <div className="mt-28 flex justify-center md:ml-32 sm:ml-32">
-        <Loader />
-      </div>
-    ) : (
-      <>
-      <div className="flex flex-row items-center gap-6 sm:ml-[28%] md:ml-[20%] mr-6 mt-6">
-        <CustomSelect
-          options={locationOption}
-          name={"location"}
-          customClass="bg-white w-60 rounded-md h-10 border border-black"
-          value={rgpData.location}
-          onChange={(e) => handleInputChange(e, "rgp")}
-          placeholder={"Choose Location"}
-        />
-        <CustomSelect
-          options={modelOption}
-          name={"vehicleModel"}
-          customClass="bg-white w-60 rounded-md h-10 border border-black"
-          value={rgpData.vehicleModel}
-          onChange={(e) => handleInputChange(e, "rgp")}
-          placeholder={"Choose Model"}
-        />
-        <CustomInput
-          type={"date"}
-          name={"startDate"}
-          className="bg-white w-full rounded-md h-10 border border-black -mt-6 px-3"
-          value={rgpData.startDate}
-          onChange={(e) => handleInputChange(e, "rgp")}
-        />
-        <CustomInput
-          type={"date"}
-          name={"endDate"}
-          className="bg-white w-full rounded-md h-10 border border-black -mt-6 px-3"
-          value={rgpData.endDate}
-          onChange={(e) => handleInputChange(e, "rgp")}
-        />
-      </div>
+        <div className="mt-28 flex justify-center md:ml-32 sm:ml-32">
+          <Loader />
+        </div>
+      ) : (
+        <>
+          <div className="flex flex-row items-center gap-6 sm:ml-[28%] md:ml-[20%] mr-6 mt-6">
+            <CustomSelect
+              options={locationOption}
+              name={"location"}
+              customClass="bg-white w-60 rounded-md h-10 border border-black"
+              value={rgpData.location}
+              onChange={(e) => handleInputChange(e, "rgp")}
+              placeholder={"Choose Location"}
+            />
+            <CustomSelect
+              options={modelOption}
+              name={"vehicleModel"}
+              customClass="bg-white w-60 rounded-md h-10 border border-black"
+              value={rgpData.vehicleModel}
+              onChange={(e) => handleInputChange(e, "rgp")}
+              placeholder={"Choose Model"}
+            />
+            <CustomInput
+              type={"date"}
+              name={"startDate"}
+              className="bg-white w-full rounded-md h-10 border border-black -mt-6 px-3"
+              value={rgpData.startDate}
+              onChange={(e) => handleInputChange(e, "rgp")}
+            />
+            <CustomInput
+              type={"date"}
+              name={"endDate"}
+              className="bg-white w-full rounded-md h-10 border border-black -mt-6 px-3"
+              value={rgpData.endDate}
+              onChange={(e) => handleInputChange(e, "rgp")}
+            />
+          </div>
 
-      <div className="ml-8 sm:ml-[33%] md:ml-[20%] md:w-[70%] gap-9 pt-3 pb-6 grid grid-cols-3">
-        {rgpCardData.map((item, index) => (
-          <Cards
-            key={index}
-            countData={item.countData}
-            titleData={item.title}
-            bgImg={item.bgImg}
-            icon={item.icon}
-            vasPriceCount={item.vasPriceCount}
+          <div className="ml-8 sm:ml-[33%] md:ml-[20%] md:w-[70%] gap-9 pt-3 pb-6 grid grid-cols-3">
+            {rgpCardData.map((item, index) => (
+              <Cards
+                key={index}
+                countData={item.countData}
+                titleData={item.title}
+                bgImg={item.bgImg}
+                icon={item.icon}
+                vasPriceCount={item.vasPriceCount}
                 partsPriceCount={item.partsPriceCount}
                 labourPriceCount={item.labourPriceCount}
                 isRgpData={item.isRgpData}
-          />
-        ))}
-      </div>
-
-
-    
-    </>
+              />
+            ))}
+          </div>
+        </>
       )}
-      </>
+    </>
   );
 };
 

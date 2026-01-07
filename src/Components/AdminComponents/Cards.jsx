@@ -13,8 +13,7 @@ const Cards = ({
   vasPriceCount,
   // serviceTypeAmount
 }) => {
-   
-   return (
+  return (
     <Link to={linkData}>
       <div
         className="bg-white px-6 text-black rounded-md border relative font-poppins border-[#E8E8E8] flex flex-col justify-between h-[230px] w-full transition-all duration-300 hover:shadow-md"
@@ -37,18 +36,18 @@ const Cards = ({
         {/* Bottom Section (Only for AMC cards) */}
         {isRgpData && (
           <div className="text-[12px] font-semibold space-y-1 pb-2">
-            <p>Total VAS Price: {vasPriceCount}</p>
+            <p>
+              Total VAS Price: {(parseFloat(vasPriceCount) || 0).toFixed(2)}
+            </p>
             <p>Total Labour Price: {labourPriceCount}</p>
             <p>Total Parts Price: {partsPriceCount}</p>
 
             {/* Dropdown Toggle */}
-            
           </div>
         )}
       </div>
     </Link>
   );
 };
-
 
 export default Cards;

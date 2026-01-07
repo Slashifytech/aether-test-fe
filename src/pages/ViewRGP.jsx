@@ -105,7 +105,7 @@ const ViewRGP = forwardRef(({ id }, ref) => {
           <p>
             The Package is designed to provide Participants with periodic
             vehicle maintenance services from date of Package purchase valid up
-            to {data?.vehicleDetails?.servicePackage} or 50,000 kilometers, whichever
+            to {data?.vehicleDetails?.servicePackage} or {data?.vehicleDetails?.servicePackage === "3 Years" ? "30,000" : "50,000"}  kilometers, whichever
             occurs earlier, to ensure their Ather vehicle remains in optimal
             condition. The Package is available for a one-time, non-refundable
             payment of INR 7375/-.

@@ -122,6 +122,14 @@ const RGPform = () => {
       label: "Vin Number",
       required: true,
     },
+     {
+      name: "servicePackage",
+      type: "select",
+      options: serviceOpt,
+      placeholder: "Service Package",
+      label: "Service Package",
+      required: true,
+    },
     {
       name: "agreementStartDate",
       type: "date",
@@ -165,14 +173,7 @@ const RGPform = () => {
       label: "Email Id of Relationship Manager/ Service Advisor ",
       required: true,
     },
-    {
-      name: "servicePackage",
-      type: "select",
-      options: serviceOpt,
-      placeholder: "Service Package",
-      label: "Service Package",
-      required: true,
-    },
+   
   ];
 
   const leftVehicleFields = [

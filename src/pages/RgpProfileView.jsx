@@ -26,6 +26,7 @@ const RgpProfileView = () => {
   const TABLE_HEAD = [
     "S.No.",
     "Vin Number",
+    "Service Type",
     "Service Date",
     "Parts Price",
     "Labour Price",
@@ -40,18 +41,34 @@ const RgpProfileView = () => {
     (sum, data) => sum + Number(data?.serviceTotalAmount || 0),
     0
   );
-  const renderCredits = (credits = []) => {
-    if (!Array.isArray(credits) || credits.length === 0) {
-      return <span className="text-gray-400">NA</span>;
-    }
+const renderCredits = (credits) => {
+  if (!credits) {
+    return <span className="text-gray-400">NA</span>;
+  }
 
-    return credits.map((item, index) => (
-      <div key={index} className="flex justify-between">
-        <span>{item.name}</span>
-        <span>{item.value}</span>
+  // CASE 1: Object { PMS: 4, PremiumWax: 2 }
+  if (!Array.isArray(credits) && typeof credits === "object") {
+    return Object.entries(credits).map(([name, value]) => (
+      <div key={name} className="flex justify-between">
+        <span>{name.replace(/([A-Z])/g, " $1").trim()}</span>
+        <span>{value}</span>
       </div>
     ));
-  };
+  }
+
+  // CASE 2: Array [{ name, value }]
+  if (Array.isArray(credits) && credits.length > 0) {
+    return credits.map((item, index) => (
+      <div key={index} className="flex justify-between">
+        <span>{item?.name ?? "NA"}</span>
+        <span>{item?.value ?? 0}</span>
+      </div>
+    ));
+  }
+
+  return <span className="text-gray-400">NA</span>;
+};
+
 
   const getTotal = (credits = []) => {
     if (!Array.isArray(credits)) return 0;
@@ -212,14 +229,13 @@ const RgpProfileView = () => {
                   <span className="text-[24px]">
                     <FaRegAddressCard />
                   </span>
-                  <span className="font-semibold text-[22px]">rgp Details</span>
+                  <span className="font-semibold text-[22px]">RGP Details</span>
                 </span>
               </div>
               <div className="flex flex-row w-full justify-between mt-6">
                 <span className="w-1/2 flex flex-col text-[15px]">
-                  <span className="font-light mt-4">Issue Type</span>
-                  <span className="font-medium">INT</span>
-                  <span className="font-light mt-4">Revenue</span>
+                 <span className="font-light mt-4">Revenue</span>
+
                   <span className="font-medium">
                     {rgpByIdorStatus?.data?.vehicleDetails?.total || "NA"}
                   </span>
@@ -263,7 +279,7 @@ const RgpProfileView = () => {
                     <FaRegAddressCard />
                   </span>
                   <span className="font-semibold text-[22px]">
-                    rgp Expense Details
+                    RGP Expense Details
                   </span>
                 </span>
               </div>
