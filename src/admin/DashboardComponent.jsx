@@ -77,18 +77,18 @@ const DashboardComponent = () => {
   const rgpCardData = [
     {
       countData: rgpData?.totalrgp,
-      title: "Total rgp Policies",
+      title: "Total RGP Policies",
       bgImg: graphLine,
       icon: TwoUser,
     },
     {
       countData: rgpData?.totalRevenue,
-      title: "Total rgp Revenue",
+      title: "Total RGP Revenue",
       icon: icon,
     },
     {
       countData: rgpData?.totalExpense,
-      title: "Total rgp Expense",
+      title: "Total RGP Expense",
       icon: icon,
       isRgpData: true,
       vasPriceCount: rgpData?.vasPriceCount,

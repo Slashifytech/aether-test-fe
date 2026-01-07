@@ -77,7 +77,7 @@ const AgentRGPsData = () => {
       </div>
 
       <p className="pt-5 text-[20px] font-semibold md:ml-[20%] sm:ml-[33%] ml-6">
-        rgp Lists-
+        RGP Lists-
       </p>
 
       <div className="font-head pt-4">

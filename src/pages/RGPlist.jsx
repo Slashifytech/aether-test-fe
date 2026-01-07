@@ -61,7 +61,7 @@ const AdminRGPList = () => {
 
   const TABLE_HEAD = [
     "S.No.",
-    "rgp Id",
+    "RGP Id",
     "Name",
     "Email",
     "VIN No.",

@@ -52,7 +52,7 @@ useEffect(() => {
       <div></div>
 
       <p className="font-semibold text-[24px] md:ml-72 sm:ml-44 ml-6 ">
-        Pending Cancel rgp Request 
+        Pending Cancel RGP Request 
       </p>
       <div className="overflow-x-scroll w-full md:w-full md:overflow-hidden ">
         <ul className="bg-secondary text-[15px] py-7 flex flex-row justify-around items-center sm:w-[93%] w-[180%]  mr-10 md:ml-72 sm:ml-44 md:w-[75%]  gap-2 rounded-lg mt-8 h-[6vh]  text-black font-medium">
