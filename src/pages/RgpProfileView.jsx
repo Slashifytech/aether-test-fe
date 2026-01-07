@@ -70,10 +70,28 @@ const renderCredits = (credits) => {
 };
 
 
-  const getTotal = (credits = []) => {
-    if (!Array.isArray(credits)) return 0;
-    return credits.reduce((sum, item) => sum + Number(item.value || 0), 0);
-  };
+  const getTotal = (credits) => {
+  if (!credits) return 0;
+
+  // CASE 1: Object { PMS: 4, PremiumWax: 2 }
+  if (!Array.isArray(credits) && typeof credits === "object") {
+    return Object.values(credits).reduce(
+      (sum, value) => sum + Number(value || 0),
+      0
+    );
+  }
+
+  // CASE 2: Array [{ name, value }]
+  if (Array.isArray(credits)) {
+    return credits.reduce(
+      (sum, item) => sum + Number(item?.value || 0),
+      0
+    );
+  }
+
+  return 0;
+};
+
 
   return (
     <>

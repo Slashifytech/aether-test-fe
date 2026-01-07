@@ -131,10 +131,10 @@ const RGPform = () => {
       required: true,
     },
     {
-      name: "agreementStartDate",
-      type: "date",
-      placeholder: "Agreement Start Date",
-      label: "Agreement Start Date",
+      name: "agreementPeriod",
+      type: "text",
+      placeholder: "Agreement Period",
+      label: "Agreement Period",
       required: true,
     },
     {
@@ -193,13 +193,14 @@ const RGPform = () => {
       options: fuelType,
       required: true,
     },
-    {
-      name: "agreementPeriod",
-      type: "text",
-      placeholder: "Agreement Period",
-      label: "Agreement Period",
+     {
+      name: "agreementStartDate",
+      type: "date",
+      placeholder: "Agreement Start Date",
+      label: "Agreement Start Date",
       required: true,
     },
+   
     {
       name: "agreementValidDate",
       type: "date",
