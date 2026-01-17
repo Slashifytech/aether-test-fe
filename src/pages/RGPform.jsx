@@ -255,7 +255,7 @@ const RGPform = () => {
         const years = parseInt(value, 10); // "3 years" → 3, "5 years" → 5
 
         updatedSection.MaximumValidPMS = years * 2;
-
+ updatedSection.agreementPeriod = years;
         // Update dependent service counts
         updatedSection.premimumWaxCharges = years;
         updatedSection.expressCareCharges = years;
@@ -293,49 +293,22 @@ const RGPform = () => {
 
       // Calculate `agreementValidMilage` if necessary fields are available
       if (
-        name === "agreementPeriod" ||
+      (name === "agreementPeriod" ||
         name === "agreementStartMilage" ||
-        name === "fuelType" ||
-        name === "model"
-      ) {
-        const agreementPeriod = parseFloat(
-          name === "agreementPeriod" ? value : updatedSection.agreementPeriod
-        );
-        const agreementStartMilage = parseInt(
-          name === "agreementStartMilage"
-            ? value
-            : updatedSection.agreementStartMilage,
-          10
-        );
-        const fuelType = name === "fuelType" ? value : updatedSection.fuelType;
-        const model = name === "model" ? value : updatedSection.model;
+        name === "servicePackage") &&
+      name !== "agreementValidMilage"
+    ) {
+      const agreementPeriod = Number(updatedSection.agreementPeriod || 0);
+      const agreementStartMilage = Number(
+        updatedSection.agreementStartMilage || 0
+      );
 
-        if (agreementPeriod && agreementStartMilage && fuelType) {
-          const mileageMultiplier =
-            fuelType === "Petrol"
-              ? 10000
-              : fuelType === "Electric Vehicle" &&
-                (model === "Comet" || model === "ZS EV")
-              ? 10000
-              : fuelType === "Electric Vehicle" && model === "Windsor"
-              ? 15000
-              : fuelType === "Electric Vehicle" &&
-                (model !== "Comet" || model !== "ZS EV")
-              ? null
-              : 15000;
-          if (
-            fuelType === "Electric Vehicle" &&
-            model !== "Comet" &&
-            model !== "Windsor" &&
-            model !== "ZS EV"
-          ) {
-            updatedSection.agreementValidMilage = 0;
-          } else {
-            updatedSection.agreementValidMilage =
-              agreementStartMilage + agreementPeriod * mileageMultiplier;
-          }
-        }
+      if (agreementPeriod && agreementStartMilage) {
+        updatedSection.agreementValidMilage =
+          agreementStartMilage + agreementPeriod * 10000;
       }
+    }
+
 
       return {
         ...prev,
