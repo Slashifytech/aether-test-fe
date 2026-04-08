@@ -202,7 +202,7 @@ const renderCredits = (credits) => {
                       ?.agreementValidDate || "NA"}
                   </span>
                   <span className="font-light mt-4">
-                    Agreement Valid Milage
+                    Agreement Valid Odometer 
                   </span>
                   <span className="font-medium">
                     {rgpByIdorStatus?.data?.vehicleDetails
@@ -227,7 +227,7 @@ const renderCredits = (credits) => {
                       ?.agreementStartDate || "NA"}
                   </span>{" "}
                   <span className="font-light mt-4">
-                    Agreement Start Milage
+                    Agreement Start Odometer 
                   </span>
                   <span className="font-medium">
                     {rgpByIdorStatus?.data?.vehicleDetails

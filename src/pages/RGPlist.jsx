@@ -218,7 +218,7 @@ const AdminRGPList = () => {
       <div className="px-6 flex justify-start md:ml-[18.5%] sm:ml-48 mt-6 ">
         <input
           type="text"
-          placeholder="Search by VIN number"
+          placeholder="Search by VIN, Name and Phone"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-[20rem] py-2 border border-gray-300 bg-white px-3 rounded-2xl outline-none"

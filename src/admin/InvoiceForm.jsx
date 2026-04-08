@@ -184,7 +184,6 @@ const InvoiceForm = () => {
       placeholder: "Total Invoice Value",
       label: "Total Invoice Value",
     },
-    
 
     {
       name: "rmName",
@@ -201,7 +200,7 @@ const InvoiceForm = () => {
       label: "Employee Id of Relationship Manager/ Service Advisor",
       required: true,
     },
-     {
+    {
       name: "gmEmail",
       type: "email",
       placeholder: "General Manager Email Id",
@@ -243,13 +242,13 @@ const InvoiceForm = () => {
       label: "CGST 9%",
       required: true,
     },
-     {
+    {
       name: "totalGst",
       type: "text",
       placeholder: "Total GST Value",
       label: "Total GST Value",
     },
-   
+
     {
       name: "totalAssessableValue",
       type: "text",
@@ -275,75 +274,75 @@ const InvoiceForm = () => {
       label: "Email Id of Relationship Manager/ Service Advisor ",
       required: true,
     },
-   
   ];
 
   const handleInput = (e) => {
-    const { name, value, dataset } = e.target;
-    const section = dataset?.section;
+  const { name, value, dataset } = e.target;
+  const section = dataset?.section;
 
-    setInvoiceData((prevState) => {
-      const updatedSection = {
-        ...prevState[section],
-        [name]: value,
-      };
+  setInvoiceData((prevState) => {
+    const toTwoDecimal = (num) => Number(num.toFixed(2));
 
-      const toTwoDecimal = (num) => Number(num.toFixed(2));
+    // Merge current input
+    const updatedSection = {
+      ...prevState[section],
+      [name]: value,
+    };
 
-      // Always read base values
-      const gstAmount = Number(updatedSection.gstAmount || 0);
-      const discountPercent = Number(updatedSection.discountPercent || 0);
-      const cgst = Number(updatedSection.cgst || 0);
-      const sgst = Number(updatedSection.sgst || 0);
+    const CGST_RATE = 9;
+    const SGST_RATE = 9;
 
-      // 🔒 Default existing values (do NOT recalc unless discount changes)
- let totalValue = prevState[section]?.totalValue ?? null;
+    const gstAmount = Number(updatedSection.gstAmount || 0);
+    const discountPercent = Number(updatedSection.discountPercent || 0);
 
+    // 1️⃣ Base total value (after discount if any)
+    let totalValue = gstAmount;
 
-      let taxableValue =
-  prevState[section]?.taxableValue ??
-  toTwoDecimal(gstAmount + cgst + sgst);
-      let totalAssessableValue =
-        prevState[section]?.totalAssessableValue || totalValue;
-
-      // ✅ Recalculate ONLY when discountPercent changes
-      if (name === "discountPercent") {
-        const discountAmount = toTwoDecimal(
-          (gstAmount * discountPercent) / 100
-        );
-
-        totalValue = toTwoDecimal(gstAmount - discountAmount);
-      taxableValue = Number(totalValue + sgst + cgst).toFixed(2);
-
-        totalAssessableValue = totalValue;
-      }
-
-      const totalGst = toTwoDecimal(cgst + sgst);
-
-      const totalInvoiceValue = toTwoDecimal(
-        totalValue + totalAssessableValue + totalGst
+    if (discountPercent > 0) {
+      const discountAmount = toTwoDecimal(
+        (gstAmount * discountPercent) / 100
       );
+      totalValue = toTwoDecimal(gstAmount - discountAmount);
+    }
 
-      const taxPayableAmtinWord = numberToWords(Math.round(totalGst)) + " Only";
+    // 2️⃣ Taxable / assessable value
+    const taxableValue = totalValue;
+    const totalAssessableValue = totalValue;
 
-      const invoiceValueAmtInWord =
-        numberToWords(Math.round(totalInvoiceValue)) + " Only";
+    // 3️⃣ Always recalculate GST from latest totalValue
+    const cgst = toTwoDecimal((taxableValue * CGST_RATE) / 100);
+    const sgst = toTwoDecimal((taxableValue * SGST_RATE) / 100);
+    const totalGst = toTwoDecimal(cgst + sgst);
 
-      return {
-        ...prevState,
-        [section]: {
-          ...updatedSection,
-          totalValue,
-          taxableValue,
-          totalAssessableValue,
-          totalGst,
-          totalInvoiceValue,
-          taxPayableAmtinWord,
-          invoiceValueAmtInWord,
-        },
-      };
-    });
-  };
+    // 4️⃣ Final invoice total
+    const totalInvoiceValue = toTwoDecimal(
+      totalAssessableValue + totalGst
+    );
+
+    // 5️⃣ Amount in words
+    const taxPayableAmtinWord =
+      numberToWords(Math.round(totalGst)) + " Only";
+
+    const invoiceValueAmtInWord =
+      numberToWords(Math.round(totalInvoiceValue)) + " Only";
+
+    return {
+      ...prevState,
+      [section]: {
+        ...updatedSection,
+        totalValue,
+        taxableValue,
+        totalAssessableValue,
+        cgst,
+        sgst,
+        totalGst,
+        totalInvoiceValue,
+        taxPayableAmtinWord,
+        invoiceValueAmtInWord,
+      },
+    };
+  });
+};
 
   useEffect(() => {
     return () => {
@@ -439,7 +438,7 @@ const InvoiceForm = () => {
                 ...acc,
                 [`billingDetail.${key}`]: `${key} in Billing Details is required`,
               },
-        {}
+        {},
       ),
       ...Object.keys(shippingDetails).reduce(
         (acc, key) =>
@@ -449,7 +448,7 @@ const InvoiceForm = () => {
                 ...acc,
                 [`shippingDetails.${key}`]: `${key} in Shipping Details is required`,
               },
-        {}
+        {},
       ),
       ...Object.keys(vehicleDetails).reduce(
         (acc, key) =>
@@ -459,7 +458,7 @@ const InvoiceForm = () => {
                 ...acc,
                 [`vehicleDetails.${key}`]: `${key} in Vehicle Details is required`,
               },
-        {}
+        {},
       ),
     };
 
@@ -470,7 +469,7 @@ const InvoiceForm = () => {
         .split(".")
         .reduce(
           (o, key) => (o && typeof o === "object" ? o[key] : undefined),
-          invoiceData
+          invoiceData,
         );
 
       if (value === undefined || value === null || value === "") {
@@ -494,7 +493,7 @@ const InvoiceForm = () => {
   useEffect(() => {
     if (location.pathname === "/admin/invoice-edit" && invoiceById?.invoice) {
       const totalValue = Number(
-        invoiceById?.invoice?.vehicleDetails?.totalValue || 0
+        invoiceById?.invoice?.vehicleDetails?.totalValue || 0,
       ).toFixed(2);
 
       setInvoiceData((prev) => ({
