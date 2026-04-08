@@ -16,9 +16,9 @@ export const fetchrgpDataById = createAsyncThunk(
 
 export const fetchrgpLists = createAsyncThunk(
     "teams/fetchrgpLists",
-    async ({page, perPage, searchTerm, userId, status }, { rejectWithValue }) => {
+    async ({page, perPage, searchTerm, userId, status, selectedRgpType }, { rejectWithValue }) => {
       try {
-        const data = await getAllrgpList(page, perPage, searchTerm, userId, status);
+        const data = await getAllrgpList(page, perPage, searchTerm, userId, status, selectedRgpType);
         return data;
       } catch (error) {
         console.log(error);

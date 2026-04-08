@@ -818,7 +818,15 @@ export function CustomTableFour({
                     {row.data?.vehicleDetails?.vinNumber || "Waiting"}
                   </Typography>
                 </td>
-
+ <td className="p-4">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {row.data?.customerDetails?.rgpType || "NA"}
+                  </Typography>
+                </td>
                 <td className="p-4">
                   <Typography
                     variant="small"

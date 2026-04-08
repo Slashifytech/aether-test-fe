@@ -48,6 +48,8 @@ export const regTypeOption = [{ id: 1, value: "Private", label: "Private" }];
 export const rgpType = [
   { id: 1, value: "Normal", label: "Normal" },
   { id: 2, value: "Insurance", label: "Insurance" },
+  { id: 3, value: "EMI", label: "EMI" },
+
 ];
 export const serviceOpt = [
   { id: 1, value: "3 Years", label: "3 Years" },

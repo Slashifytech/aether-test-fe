@@ -11,6 +11,7 @@ import { fetchrgpLists } from "../../features/RGPSlice";
 import { updatergpStatus } from "../../features/RGPapi";
 import InvoicePopUp from "../InvoicePopUp";
 import { setEmptyInvoiceData } from "../../features/InvoiceSlice";
+import { rgpType } from "../../data";
 
 const RGPApproval = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,10 @@ const RGPApproval = () => {
   const totalCount = rgpLists?.pagination?.totalItems;
   const [loading, setLoading] = useState(true);
 
+  const [selectedRgpType, setSelectedRgpType] = useState("");
+const handleRgpTypeChange = (e) => {
+    setSelectedRgpType(e.target.value);
+  };
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
   };
@@ -33,11 +38,12 @@ const RGPApproval = () => {
         option: null,
         options: null,
         status: "pending",
+        selectedRgpType
       })
     );
 
 
-  }, [page, perPage]);
+  }, [page, perPage, selectedRgpType]);
 useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -47,8 +53,18 @@ useEffect(() => {
   }, []);
   return (
     <>
-      <div></div>
-
+           <select
+        value={selectedRgpType}
+        onChange={handleRgpTypeChange}
+        className="px-6 py-2 ml-[19%] bg-white flex flex-row items-center cursor-pointer gap-3 text-black rounded-md border border-gray-300 text-[16px] "
+      >
+        <option value="">All RGP Types</option>
+        {rgpType.map((item) => (
+  <option key={item.value} value={item.value}>
+    {item.label}
+  </option>
+))}
+      </select>
       <p className="font-semibold text-[24px] md:ml-72 sm:ml-44 ml-6 ">
         Pending Approval List
       </p>
@@ -151,7 +167,7 @@ const ApprovalCard = ({ item, index }) => {
           {item?.isCancelReq === "reqCancel"
             ? "Sent a request to cancel the rgp of"
             : " Sent a request to approve the rgp of"}{" "}
-          {item?.customerDetails?.customerName}
+          {item?.customerDetails?.customerName}, RGP type:  {item?.customerDetails?.rgpType}
           <Link
              to={`/rgp-view/${item?._id}`}
              target="_blank"

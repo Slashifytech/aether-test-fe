@@ -21,6 +21,7 @@ import { RiUpload2Fill } from "react-icons/ri";
 import Papa from "papaparse";
 import { IoMdDownload } from "react-icons/io";
 import { downloadCsvData } from "../../Util/UtilityFunction";
+import { rgpType } from "../data";
 const AdminRGPList = () => {
   const { _id, roleType } = useSelector((state) => state.users?.users);
   const userId = roleType === "2" ? _id : null;
@@ -29,7 +30,7 @@ const AdminRGPList = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
-
+  const [selectedRgpType, setSelectedRgpType] = useState("");
   const perPage = 10;
   const currentPage = rgpLists?.pagination?.currentPage;
   const totalPagesCount = rgpLists?.pagination?.totalPages;
@@ -39,10 +40,9 @@ const AdminRGPList = () => {
   };
 
   useEffect(() => {
- 
     if (roleType === "2" && userId) {
       dispatch(
-        fetchrgpLists({ page, perPage, searchTerm, userId, option: null })
+        fetchrgpLists({ page, perPage, searchTerm, userId, option: null }),
       );
     } else if (roleType === "0" || roleType === "1") {
       dispatch(
@@ -52,12 +52,11 @@ const AdminRGPList = () => {
           searchTerm,
           userId: null,
           status: false,
-        })
+          selectedRgpType,
+        }),
       );
     }
-
-  
-  }, [page, perPage, searchTerm, userId]);
+  }, [page, perPage, searchTerm, userId, selectedRgpType]);
 
   const TABLE_HEAD = [
     "S.No.",
@@ -65,6 +64,7 @@ const AdminRGPList = () => {
     "Name",
     "Email",
     "VIN No.",
+    "RGP type",
     "rgp Issue date",
     "View Profile",
     "View/Download",
@@ -82,13 +82,15 @@ const AdminRGPList = () => {
   const handleDispatch = () => {
     dispatch(setEmptyrgp());
   };
-
+  const handleRgpTypeChange = (e) => {
+    setSelectedRgpType(e.target.value);
+  };
   const handleResubmit = async (id) => {
     try {
       const res = await rgpResubmit(id);
       if (roleType === "2" && userId) {
         dispatch(
-          fetchrgpLists({ page, perPage, options: null, userId, option: null })
+          fetchrgpLists({ page, perPage, options: null, userId, option: null }),
         );
       } else if (roleType === "0" || roleType === "1") {
         dispatch(
@@ -98,7 +100,7 @@ const AdminRGPList = () => {
             optiond: null,
             userId: null,
             status: false,
-          })
+          }),
         );
       }
       toast.success(res?.message || "rgp resubmitted successfully");
@@ -117,7 +119,7 @@ const AdminRGPList = () => {
           searchTerm,
           userId: null,
           status: false,
-        })
+        }),
       );
       toast.success(res?.message || "rgp cancelled successfully");
     } catch (error) {
@@ -135,9 +137,9 @@ const AdminRGPList = () => {
           optionf: null,
           optiond: null,
           options: null,
-      userId,
-          status:  undefined,
-        })
+          userId,
+          status: undefined,
+        }),
       );
     } catch (error) {
       console.error(error, "Something went wrong");
@@ -146,30 +148,30 @@ const AdminRGPList = () => {
   };
 
   const handleFileUpload = async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
+    const file = event.target.files[0];
+    if (!file) return;
 
-  try {
-    await rgpExpenseNewExpense(file);
-    toast.success("All expenses uploaded successfully!");
-    event.target.value = "";
-  } catch (error) {
-    event.target.value = "";
-    console.error(error);
-    toast.error(
-      error?.response?.data?.message || "Error uploading expenses."
-    );
-  }
-};
+    try {
+      await rgpExpenseNewExpense(file);
+      toast.success("All expenses uploaded successfully!");
+      event.target.value = "";
+    } catch (error) {
+      event.target.value = "";
+      console.error(error);
+      toast.error(
+        error?.response?.data?.message || "Error uploading expenses.",
+      );
+    }
+  };
 
   const handleDownload = async () => {
-    const path = "/rgp-download"
+    const path = "/rgp-download";
     await downloadCsvData(path);
   };
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); 
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -214,8 +216,9 @@ const AdminRGPList = () => {
           </span>
         )}
       </div>
-
-      <div className="px-6 flex justify-start md:ml-[18.5%] sm:ml-48 mt-6 ">
+    
+      <div className="px-6 flex justify-start md:ml-[18.5%] sm:ml-48 mt-6 gap-9">
+       
         <input
           type="text"
           placeholder="Search by VIN, Name and Phone"
@@ -223,6 +226,18 @@ const AdminRGPList = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-[20rem] py-2 border border-gray-300 bg-white px-3 rounded-2xl outline-none"
         />
+           <select
+        value={selectedRgpType}
+        onChange={handleRgpTypeChange}
+        className="px-6 bg-white flex flex-row items-center cursor-pointer gap-3 text-black rounded-md border border-gray-300 text-[16px] "
+      >
+        <option value="">All RGP Types</option>
+        {rgpType.map((item) => (
+  <option key={item.value} value={item.value}>
+    {item.label}
+  </option>
+))}
+      </select>
       </div>
 
       <p className="pt-5 text-[20px] font-semibold md:ml-[21%] sm:ml-[28%] ml-6">

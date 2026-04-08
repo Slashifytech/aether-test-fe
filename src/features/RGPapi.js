@@ -43,7 +43,8 @@ export const getAllrgpList = async (
   perPage,
   searchTerm,
   userId,
-  status
+  status,
+  selectedRgpType
 ) => {
   try {
     const response = await apiurl.get(`/rgp-lists`, {
@@ -53,6 +54,7 @@ export const getAllrgpList = async (
         search: searchTerm,
         page: page,
         perPage: perPage,
+        rgpType: selectedRgpType
       },
     });
 

@@ -52,6 +52,8 @@ const RGPform = () => {
       frontBrakePad: "",
       rearBrakePad: "",
       wetWashService: "",
+      restPayment:"",
+      downPayment: ""
     },
     createdBy: _id,
   });
@@ -151,6 +153,14 @@ const RGPform = () => {
       label: "Maximum Valid Number of PMS",
       required: true,
     },
+     {
+      name: "downPayment",
+      type: "number",
+      placeholder: "Downpayment",
+      label: "Downpayment",
+      required: true,
+    },
+
     {
       name: "total",
       type: "text",
@@ -223,7 +233,13 @@ const RGPform = () => {
       label: "Location of the Dealer",
       required: true,
     },
-
+ {
+      name: "restPayment",
+      type: "number",
+      placeholder: "Rest Payment",
+      label: "Rest Payment",
+      required: true,
+    },
     {
       name: "rmEmployeeId",
       type: "text",
